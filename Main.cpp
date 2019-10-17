@@ -9,6 +9,7 @@ team_info blue,orange;
 void Main() {
     Console.open();
     initialize_for_local();
+    input_random_action(blue);
     while (System::Update())
     {
         if ((KeyCommand.pressed() || KeyControl.pressed()) && KeyR.down()) initialize_for_local();
@@ -22,9 +23,12 @@ void Main() {
             print_arrow();
             
             if (KeyEnter.down()) {
-                input_random_action(blue);
-                //ここで行動を入力すると良さそう
                 local_transition();
+                
+                if (turn > 0) {
+                    //ここで行動を入力すると良さそう
+                    input_random_action(blue);
+                }
             }
         }
         
