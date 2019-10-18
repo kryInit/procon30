@@ -11,5 +11,8 @@ void input_random_action(team_info& team);
 
 void local_transition();
 
+void log_all_values();
+void rollback();
+
 
 #endif /* include_all_header_hpp */

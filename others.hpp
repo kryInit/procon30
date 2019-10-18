@@ -3,6 +3,8 @@
 //defineや構造体の定義、いろいろな場所で使う関数などの定義を行なっている
 
 #include <Siv3D.hpp>
+#include "picojson.h"
+#include <fstream>
 
 using namespace std;
 
