@@ -8,6 +8,7 @@ void print_various();
 void print_arrow();
 
 void input_random_action(team_info& team);
+void input_exgreedy_action(team_info& team, int my_color, int enemy_color, int N);
 
 void local_transition();
 

@@ -8,12 +8,17 @@ team_info blue,orange;
 
 void Main() {
     Console.open();
+    Graphics::SetTargetFrameRateHz(30);
     initialize_for_local();
-    input_random_action(blue);
+    input_exgreedy_action(blue, blue.teamID, orange.teamID, 6);
     input_random_action(orange);
     while (System::Update())
     {
-        if ((KeyCommand.pressed() || KeyControl.pressed()) && KeyR.down()) initialize_for_local();
+        if ((KeyCommand.pressed() || KeyControl.pressed()) && KeyR.down()) {
+            initialize_for_local();
+            input_exgreedy_action(blue, blue.teamID, orange.teamID, 6);
+            input_random_action(orange);
+        }
         if ((KeyCommand.pressed() || KeyControl.pressed()) && KeyZ.down()) rollback();
         if (KeyUp.down()) border = min(17LL, border+1);
         if (KeyDown.down()) border = max(-17LL, border-1);
@@ -30,7 +35,7 @@ void Main() {
             }
             if (turn > 0) {
                 //ここで行動を入力すると良さそう
-                input_random_action(blue);
+                input_exgreedy_action(blue, blue.teamID, orange.teamID, 6);
                 input_random_action(orange);
             }
         }
