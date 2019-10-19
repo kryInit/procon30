@@ -10,13 +10,13 @@ void Main() {
     Console.open();
     initialize_for_local();
     input_random_action(blue);
+    input_random_action(orange);
     while (System::Update())
     {
         if ((KeyCommand.pressed() || KeyControl.pressed()) && KeyR.down()) initialize_for_local();
         if ((KeyCommand.pressed() || KeyControl.pressed()) && KeyZ.down()) rollback();
         if (KeyUp.down()) border = min(17LL, border+1);
         if (KeyDown.down()) border = max(-17LL, border-1);
-        
         
         print_various();
         
@@ -31,6 +31,7 @@ void Main() {
             if (turn > 0) {
                 //ここで行動を入力すると良さそう
                 input_random_action(blue);
+                input_random_action(orange);
             }
         }
         

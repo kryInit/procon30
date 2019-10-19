@@ -1,8 +1,8 @@
-#include "others.hpp"
+#include "others.h"
 
 using namespace std;
 
-extern int tile_size,height,width,agent_num,turn,points[20][20],tiled[20][20],agent_exist[20][20],border;
+extern int tile_size,height,width,agent_num,turn,points[20][20],tiled[20][20],agent_exist[20][20];
 extern team_info blue, orange;
 
 
@@ -21,12 +21,9 @@ int select_best_border();
 
 void initialize_for_local() {
     initialize_to_zero();
-    
+
 //    json_field();
     random_field();
-    
-    border = select_best_border();
-    Window::Resize(tile_size*width+200,tile_size*height+20);
 }
 
 void json_field() {
@@ -34,24 +31,24 @@ void json_field() {
     picojson::value value;
     ifstream ifs;
     //適切なパスに書き換えてください
-    ifs.open("../src/json_file/" + json_file_name[12]);
+    ifs.open("../json_file/" + json_file_name[12]);
     ifs >> value;
     ifs.close();
-    
-    
+
+
     height = (int)(value.get<picojson::object>()["height"].get<double>());
     width = (int)(value.get<picojson::object>()["width"].get<double>());
     agent_num = (int)(value.get<picojson::object>()["teams"].get<picojson::value::array>()[0].get<picojson::object>()["agents"].get<picojson::value::array>().size());
     turn = (int)XorShift()%31 + 30;
-    
+
     rep(i,height) rep(j,width) {
         points[i][j] = (int)(value.get<picojson::object>()["points"].get<picojson::value::array>()[i].get<picojson::value::array>()[j].get<double>());
         tiled[i][j] = (int)(value.get<picojson::object>()["tiled"].get<picojson::value::array>()[i].get<picojson::value::array>()[j].get<double>());
     }
-    
+
     int index;
     picojson::value blueteamjson = value.get<picojson::object>()["teams"].get<picojson::value::array>()[0], orangeteamjson = value.get<picojson::object>()["teams"].get<picojson::value::array>()[1];
-    
+
     blue.teamID = (int)(blueteamjson.get<picojson::object>()["teamID"].get<double>());
     blue.tilePoint = (int)(blueteamjson.get<picojson::object>()["tilePoint"].get<double>());
     blue.areaPoint = (int)(blueteamjson.get<picojson::object>()["areaPoint"].get<double>());
@@ -66,7 +63,7 @@ void json_field() {
         agent_exist[y][x] = blue.teamID;
         index++;
     }
-    
+
     orange.teamID = (int)(orangeteamjson.get<picojson::object>()["teamID"].get<double>());
     orange.tilePoint = (int)(orangeteamjson.get<picojson::object>()["tilePoint"].get<double>());
     orange.areaPoint = (int)(orangeteamjson.get<picojson::object>()["areaPoint"].get<double>());
@@ -82,6 +79,7 @@ void json_field() {
         index++;
     }
 }
+
 void random_field() {
     rep(i,time(NULL)%100000) XorShift();
     height = width = (int)XorShift()%11 + 10;
@@ -95,17 +93,17 @@ void random_field() {
 
 void initialize_teams() {
     int z = 1;
-    blue.teamID = z, z += XorShift()%10;
-    orange.teamID = z, z += XorShift()%10;
-    rep(i,8) blue.agents[i].agentID = z, z += XorShift()%10;
-    rep(i,8) orange.agents[i].agentID = z, z += XorShift()%10;
+    blue.teamID = z, z += XorShift()%5+1;
+    orange.teamID = z, z += XorShift()%10+1;
+    rep(i,8) blue.agents[i].agentID = z, z += XorShift()%10+1;
+    rep(i,8) orange.agents[i].agentID = z, z += XorShift()%10+1;
 }
 
 string determine_the_symmetry_of_tiles() {
     if (height%2 && width%2) return "point_symmetry";
     if (height%2) return "y-axis_symmetry";
     if (width%2) return "x-axis_symmetry";
-    
+
     string randres[3] = {"point_symmetry", "y-axis_symmetry", "x-axis_symmetry"};
     return randres[XorShift()%3];
 }
@@ -133,7 +131,7 @@ void generate_agents(string symmetric) {
         if (symmetric == "point_symmetry") orange_xy = mp(height-blue_xy.fi-1, width-blue_xy.se-1);
         if (symmetric == "y-axis_symmetry") orange_xy = mp(blue_xy.fi, width-blue_xy.se-1);
         if (symmetric == "x-axis_symmetry") orange_xy = mp(height-blue_xy.fi-1, blue_xy.se);
-        
+
         if (blue_xy == orange_xy) i--;
         else if (!is_used[blue_xy]) {
             tiled[blue_xy.fi][blue_xy.se] = agent_exist[blue_xy.fi][blue_xy.se] = blue.teamID;
@@ -147,18 +145,6 @@ void generate_agents(string symmetric) {
             is_used[blue_xy] = is_used[orange_xy] = true;
         } else i--;
     }
-}
-
-int select_best_border() {
-    int memo[33] = {},sum=0,border = (height*width*0.3);
-    rep(i,height) rep(j,width) memo[points[i][j]+16]++;
-    for(int i=32;i>=0;--i) {
-        sum += memo[i];
-        if (border <= sum) {
-            return i-16;
-        }
-    }
-    return -16;
 }
 
 void initialize_to_zero() {
