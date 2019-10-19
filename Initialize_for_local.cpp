@@ -22,9 +22,8 @@ int select_best_border();
 void initialize_for_local() {
     initialize_to_zero();
     
-    initialize_teams();
-    json_field();  //Unimplemented
-//    random_field();
+//    json_field();
+    random_field();
     
     border = select_best_border();
     Window::Resize(tile_size*width+200,tile_size*height+20);
@@ -87,15 +86,16 @@ void random_field() {
     height = width = (int)XorShift()%11 + 10;
     agent_num = (int)XorShift()%6 + 3;
     turn = (int)XorShift()%31 + 30;
+    initialize_teams();
     string symmetry=determine_the_symmetry_of_tiles();
     generate_tiles(symmetry);
     generate_agents(symmetry);
 }
 
 void initialize_teams() {
-    int z = 0;
-    blue.teamID = 1;
-    orange.teamID = 2;
+    int z = 1;
+    blue.teamID = z, z += XorShift()%10;
+    orange.teamID = z, z += XorShift()%10;
     rep(i,8) blue.agents[i].agentID = z, z += XorShift()%10;
     rep(i,8) orange.agents[i].agentID = z, z += XorShift()%10;
 }

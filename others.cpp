@@ -58,3 +58,4 @@ int area_tile_score_count(int team_color) {
     return atscs.count(team_color);
 }
 
+
