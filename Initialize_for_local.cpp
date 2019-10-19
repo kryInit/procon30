@@ -23,8 +23,8 @@ void initialize_for_local() {
     rep(i,time(NULL)%100000) XorShift();
     initialize_to_zero();
     
-//    json_field();
-    random_field();
+    json_field();
+//    random_field();
     
     border = select_best_border();
     Window::Resize(tile_size*width+200,tile_size*height+20);
@@ -123,7 +123,7 @@ void json_field() {
     picojson::value value;
     ifstream ifs;
     //適切なパスに書き換えてください
-    ifs.open("../src/json_file/" + json_file_name[12]);
+    ifs.open("../src/json_file/" + json_file_name[14]);
     ifs >> value;
     ifs.close();
     

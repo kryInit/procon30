@@ -236,7 +236,7 @@ bool check_nearby_tiles(int k, int agentID, team_info& team, int my_color, int e
             y = Y;
         }
     }
-    if (tmp < 0 && -tmp >= border) {
+    if (tmp < 0 && -tmp >= border && !team.check_for_duplicate_action(y, x)) {
         team.agents[k].input_next_command(y, x, "remove");
         return true;
     }

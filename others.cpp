@@ -6,17 +6,19 @@ extern int tile_size,height,width,agent_num,turn,points[20][20],tiled[20][20],ag
 extern team_info blue, orange;
 
 
+unsigned Xseed[4];
+void initialize_XorShift(unsigned s) {
+    for(int i=1; i<=4; i++){
+        Xseed[i-1] = s = 1812433253 * (s^(s>>30)) + (unsigned)i;
+    }
+}
 unsigned XorShift(void) {
-    static unsigned x = 123456789;
-    static unsigned y = 362436069;
-    static unsigned z = 521288629;
-    static unsigned width = 88675123;
     unsigned t;
-    t = x ^ (x << 11);
-    x = y;
-    y = z;
-    z = width;
-    return width = (width ^ (width >> 19)) ^ (t ^ (t >> 8));
+    t=(Xseed[0]^(Xseed[0]<<11));
+    Xseed[0]=Xseed[1];
+    Xseed[1]=Xseed[2];
+    Xseed[2]=Xseed[3];
+    return Xseed[3]=(Xseed[3]^(Xseed[3]>>19))^(t^(t>>8));
 }
 
 bool is_safe_index(int y, int x) {

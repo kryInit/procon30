@@ -55,13 +55,19 @@ struct team_info {
     void Initialize_all_next_command() {
         rep(i,8) agents[i].Initialize_next_command();
     }
+    bool check_for_duplicate_action(int y, int x) {
+        rep(i,8) if (!agents[i].next_command.empty()) {
+            if (agents[i].y == y && agents[i].x == x) return true;
+        }
+        return false;
+    }
 };
 struct action_command {
     int agentID,dx,dy,turn,apply;
     string type;
 };
 
-
+void initialize_XorShift(unsigned s);
 unsigned XorShift(void);
 bool is_safe_index(int y, int x);
 int area_tile_score_count(int team_color);
