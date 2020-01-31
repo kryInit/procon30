@@ -5,18 +5,18 @@ using namespace std;
 extern int tile_size,height,width,agent_num,turn,points[20][20],tiled[20][20],agent_exist[20][20],border;
 extern team_info blue, orange;
 
-void get_arrow();
+void get_arrow(bool get_blue_arrow, bool get_orange_arrow);
 void print_determined_action(team_info team);
 
-
 void print_arrow() {
-    get_arrow();
-    print_determined_action(blue);
-    print_determined_action(orange);
+    bool get_blue_arrow=false, get_orange_arrow=true;
+    get_arrow(get_blue_arrow, get_orange_arrow);
+    if (get_blue_arrow) print_determined_action(blue);
+    if (get_orange_arrow) print_determined_action(orange);
 }
 
-void get_arrow() {
-    // before/after == before/after compression
+void get_arrow(bool get_blue_arrow, bool get_orange_arrow) {
+    // (before/after) == (before/after compression)
     static pair<int,int> before;
     static string command;
     static Color action_color;
@@ -32,7 +32,7 @@ void get_arrow() {
         before = mp(after.fi*tile_size + tile_size/2+10, after.se*tile_size + tile_size/2+10);
         i = after.fi;
         j = after.se;
-        if (is_safe_index(i,j) && agent_exist[i][j]) while_dragging = true;
+        if (is_safe_index(i,j) && ((agent_exist[i][j] == blue.teamID && get_blue_arrow) || (agent_exist[i][j] == orange.teamID && get_orange_arrow))) while_dragging = true;
         else command.clear();
     }
     if ((MouseL.pressed() || MouseR.pressed()) && while_dragging) Line(before.se, before.fi, Cursor::Pos().x, Cursor::Pos().y).drawArrow(5,Vec2(10,10), action_color);
@@ -48,12 +48,12 @@ void get_arrow() {
         after = mp((Cursor::Pos().y-10)/tile_size, (Cursor::Pos().x-10)/tile_size);
         if (is_safe_index(after.fi, after.se)) {
             rep(i,agent_num) {
-                if (blue.agents[i].xy() == agent_location) {
+                if (blue.agents[i].xy() == agent_location && get_blue_arrow) {
                     blue.agents[i].next_y = after.fi;
                     blue.agents[i].next_x = after.se;
                     blue.agents[i].next_command = command;
                 }
-                if (orange.agents[i].xy() == agent_location) {
+                if (orange.agents[i].xy() == agent_location && get_orange_arrow) {
                     orange.agents[i].next_y = after.fi;
                     orange.agents[i].next_x = after.se;
                     orange.agents[i].next_command = command;

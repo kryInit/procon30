@@ -16,18 +16,14 @@ int tiles_score_decision();
 void generate_tiles(string symmetric);
 void generate_agents(string symmetric);
 string determine_the_symmetry_of_tiles();
-int select_best_border();
 
 
 void initialize_for_local() {
     rep(i,time(NULL)%100000) XorShift();
     initialize_to_zero();
     
-    json_field();
-//    random_field();
-    
-    border = select_best_border();
-    Window::Resize(tile_size*width+200,tile_size*height+20);
+//    json_field();
+    random_field();
 }
 
 void random_field() {
@@ -94,18 +90,6 @@ void generate_agents(string symmetric) {
             is_used[blue_xy] = is_used[orange_xy] = true;
         } else i--;
     }
-}
-
-int select_best_border() {
-    int memo[33] = {},sum=0,border = (height*width*0.3);
-    rep(i,height) rep(j,width) memo[points[i][j]+16]++;
-    for(int i=32;i>=0;--i) {
-        sum += memo[i];
-        if (border <= sum) {
-            return i-16;
-        }
-    }
-    return -16;
 }
 
 void initialize_to_zero() {

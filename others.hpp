@@ -71,6 +71,7 @@ void initialize_XorShift(unsigned s);
 unsigned XorShift(void);
 bool is_safe_index(int y, int x);
 int area_tile_score_count(int team_color);
+int select_best_border();
 
 
 #endif /* structure_hpp */

@@ -60,4 +60,16 @@ int area_tile_score_count(int team_color) {
     return atscs.count(team_color);
 }
 
+int select_best_border() {
+    int memo[33] = {},sum=0,border = (height*width*0.3);
+    rep(i,height) rep(j,width) memo[points[i][j]+16]++;
+    for(int i=32;i>=0;--i) {
+        sum += memo[i];
+        if (border <= sum) {
+            return i-16;
+        }
+    }
+    return -16;
+}
+
 

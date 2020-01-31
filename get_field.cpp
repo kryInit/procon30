@@ -14,10 +14,11 @@ picojson::value get_field_info();
 extern int tile_size,height,width,agent_num,turn,points[20][20],tiled[20][20],agent_exist[20][20],border;
 extern team_info blue, orange;
 
+
+string token = "kr";
 string port_num, matchID, status;
-int matchID_n, intervalMillis, turnMillis, myteamID, enemyteamID;
-int startAtUnixTime, startTimeMilli, nowTimeMilli, nextTurnTimeMilli;
-int startedAtUnixTime, max_turn;
+int matchID_n, myteamID, enemyteamID;
+extern int startAtUnixTime, startTimeMilli, nowTimeMilli, nextTurnTimeMilli, intervalMillis, turnMillis, startedAtUnixTime, max_turn;
 
 void initialize_for_sever() {
     printf("ポート番号 (Port Number) => ");
@@ -151,7 +152,7 @@ void send_json_to_server(picojson::value data) {
     string s = data.serialize();
     fprintf(fp, "%s", s.c_str());
     fclose(fp);
-    string command = "curl -H \"Authorization: procon30_example_token\" -H \"Content-Type: application/json\" -X POST http://localhost:" + port_num + "/matches/" + matchID + "/action -d @send.json";
+    string command = "curl -H \"Authorization: " + token + "\" -H \"Content-Type: application/json\" -X POST http://localhost:" + port_num + "/matches/" + matchID + "/action -d @send.json";
     if ((pp = popen(command.c_str(), "r")) == NULL) {
         cout << "send command is failed" << endl;
     }
@@ -255,7 +256,7 @@ int get_time_milli() {
 picojson::value get_match_info() {
     cout << "getting match info" << endl;
     FILE* pp;
-    string command_to_get_info = "curl -H \"Authorization: procon30_example_token\" http://localhost:" + port_num + "/matches";
+    string command_to_get_info = "curl -H \"Authorization: " + token + "\" http://localhost:" + port_num + "/matches";
     cout << command_to_get_info << endl;
     if ((pp = popen(command_to_get_info.c_str(), "r")) == NULL) {
         cout << "get match is failed" << endl;
@@ -279,7 +280,7 @@ picojson::value get_field_info() {
     cout << "getting field info" << endl;
     //コマンドを送信し、結果をpicojson::value型の結果(パースされ扱いやすくなったやつ)で返す
     FILE* pp;
-    string command_to_get_info = "curl -H \"Authorization: procon30_example_token\" http://localhost:" + port_num + "/matches/" + matchID;
+    string command_to_get_info = "curl -H \"Authorization: " + token + "\" http://localhost:" + port_num + "/matches/" + matchID;
     if ((pp = popen(command_to_get_info.c_str(), "r")) == NULL) {
         cout << "get command is failed" << endl;
     }
